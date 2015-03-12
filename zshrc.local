@@ -1,0 +1,28 @@
+function zle-line-init zle-keymap-select {
+  VIM_PROMPT="%{$fg_bold[blue]%} [% NORMAL]% %{$reset_color%}"
+  RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
+  zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+# Complete within words, not just at either end
+setopt complete_in_word
+
+# Complete from left orf right case-insensitively
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+# arrow driven autocomplete
+zstyle ':completion:*' menu select
+
+# complete aliases
+setopt completealiases
+
+# bind jk to vi command mode
+bindkey jk vi-cmd-mode
+
+export PATH="$HOME/.bin:$PATH"
+eval "$(rbenv init - zsh --no-rehash)"
+
+export CDPATH=~/dev/:~/dev/Upcase/
