@@ -2,3 +2,5 @@ Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'Keithbsmiley/swift.vim'
 Plugin 'scrooloose/nerdtree'
+Plugin 'itspriddle/vim-marked'
+
