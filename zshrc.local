@@ -26,3 +26,7 @@ export PATH="$HOME/.bin:$PATH"
 eval "$(rbenv init - zsh --no-rehash)"
 
 export CDPATH=~/dev/:~/dev/Upcase/
+
+for function in ~/dotfiles-local/functions/*; do
+  source $function
+done
