@@ -3,4 +3,6 @@ Plug 'plasticboy/vim-markdown'
 Plug 'Keithbsmiley/swift.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'itspriddle/vim-marked'
-
+Plug 'itchyny/lightline.vim'
+Plug 'gfontenot/vim-xcodebuild'
+Plug 'jonathanfilip/vim-lucius'
