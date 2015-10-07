@@ -1,11 +1,67 @@
-function zle-line-init zle-keymap-select {
-  VIM_PROMPT="%{$fg_bold[blue]%} [% NORMAL]% %{$reset_color%}"
-  RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
-  zle reset-prompt
+autoload -U colors && colors
+prompt_opts=( cr subst percent )
+
+export PROMPT='%(?.%F{green}.%F{red})❯%f '
+export RPROMPT=$'%c $(git_info)'
+
+git_info() {
+  if git_dir &>/dev/null; then
+    echo "$(current_branch)$(rebase_info)$(repo_dirty)$(needs_push)$(current_sha)"
+  fi
 }
 
-zle -N zle-line-init
-zle -N zle-keymap-select
+current_branch() {
+  local branch_name="$(current_branch_name)"
+
+  if [ "$branch_name" = "HEAD" ]; then
+    echo "%{$fg[red]%}DETACHED%{$reset_color%}"
+  else
+    echo "%{$fg[blue]%}$branch_name%{$reset_color%}"
+  fi
+}
+
+current_sha() {
+  echo " %{$fg[yellow]%}$(git rev-parse --short HEAD)%{$reset_color%}"
+}
+
+rebase_info() {
+  local git_dir="$(git_dir)"
+
+  if [ -f "$git_dir/BISECT_LOG" ]; then
+    echo "+bisect"
+  elif [ -f "$git_dir/MERGE_HEAD" ]; then
+    echo "+merge"
+  else
+    for file in rebase rebase-apply rebase-merge; do
+      if [ -e "$git_dir/$file" ]; then
+        echo "+rebase"
+        break
+      fi
+    done
+  fi
+}
+
+repo_dirty() {
+  if [[ ! $(git status 2>/dev/null) =~ "directory clean" ]]; then
+    echo " %{$fg[red]%}✗%{$reset_color%}"
+  fi
+}
+
+needs_push() {
+  if [[ -n "$(git cherry -v origin/$(current_branch_name) 2>/dev/null)" ]]; then
+    echo " %{$fg[red]%}⬆%{$reset_color%} "
+  fi
+}
+
+current_branch_name() {
+  git rev-parse --abbrev-ref HEAD
+}
+
+git_dir() {
+  git rev-parse --git-dir 2>/dev/null
+}
+# zle -N zle-line-init
+# zle -N zle-keymap-select
 
 # Complete within words, not just at either end
 setopt complete_in_word
@@ -16,17 +72,34 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}' 'r:|[._-]=* r:|=*' 'l:|=* r:
 # arrow driven autocomplete
 zstyle ':completion:*' menu select
 
+# pasting with tabs doesn't perform completion
+ zstyle ':completion:*' insert-tab pending
+
 # complete aliases
 setopt completealiases
 
-# bind jk to vi command mode
 bindkey jk vi-cmd-mode
 
 export PATH="$HOME/.bin:$PATH"
+
 eval "$(rbenv init - zsh --no-rehash)"
 
-export CDPATH=~/dev/:~/dev/Upcase/
+export CDPATH=~/dev/:~/Desktop/
+
+export LSCOLORS="exfxcxdxbxegedabagacad"
+export CLICOLOR=true
+setopt NO_BG_NICE # don't nice background tasks
+setopt NO_HUP
+setopt NO_LIST_BEEP
+setopt LOCAL_OPTIONS # allow functions to have local options
+setopt LOCAL_TRAPS # allow functions to have local traps
+setopt PROMPT_SUBST
+setopt CORRECT
+setopt COMPLETE_IN_WORD
+setopt IGNORE_EOF
 
 for function in ~/dotfiles-local/functions/*; do
   source $function
 done
+
+alias l=ls
