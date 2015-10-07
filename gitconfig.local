@@ -1,6 +1,7 @@
 [user]
   name = John Regner
-  email = john@johnregner.com
+  email = regnerjr@gmail.com
+  username = regnerjr
 
 [alias]
   l = log --oneline --branches --decorate --graph
@@ -9,14 +10,14 @@
   type = cat-file -t
   dump = cat-file -p
 
-	branches = !legit branches
-	switch = !legit switch \"$@\"
-	sprout = !legit sprout \"$@\"
-	unpublish = !legit unpublish \"$@\"
-	harvest = !legit harvest \"$@\"
-	sync = !legit sync \"$@\"
-	publish = !legit publish \"$@\"
-	graft = !legit graft \"$@\"
+  branches = !legit branches
+  switch = !legit switch \"$@\"
+  sprout = !legit sprout \"$@\"
+  unpublish = !legit unpublish \"$@\"
+  harvest = !legit harvest \"$@\"
+  sync = !legit sync \"$@\"
+  publish = !legit publish \"$@\"
+  graft = !legit graft \"$@\"
 
 [help]
   autocorrect = 1
