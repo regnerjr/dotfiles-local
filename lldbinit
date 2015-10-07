@@ -1,2 +1,5 @@
 command alias uikit expr import UIKit
 command alias foundation expr import Foundation
+
+command alias hierarchy expr -l objc++ -O -- [UIViewController _printHierarchy]
+command alias recursiveDescription expr -l objc++ -O -- [[UIWindow keyWindow] recursiveDescription]
